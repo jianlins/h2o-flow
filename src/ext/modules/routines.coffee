@@ -428,7 +428,22 @@ H2O.Routines = (_) ->
     render_ result, H2O.MergeFramesOutput, result
     result
 
+
+  # inspectPartialDependence = (pdpdata)->
+  #   for pdp in pdpdata
+  #     vectors = [
+  #       createFactor pdp.columns[0].name, pdp.columns[0].type, pdp.data[0]
+  #       createVector pdp.columns[1].name, pdp.columns[1].type, pdp.data[1]
+  #     ]
+
+  #     createDataframe 'partial dependence', vectors, (sequence 1), null, 
+  #       description: pdp.columns[0].name
+  #       origin: "getPartialDependence #{stringify pdp.destination_key}, #{stringify pdp.columns[0].name}"
+  #       plot: "plot inspect 'partial dependence', getPartialDependence #{stringify pdp.destination_key}, #{stringify pdp.columns[0].name}"
+
   extendPartialDependence= (result) ->
+    # inspect_ result,
+    #   result: inspectPartialDependence result
     render_ result, H2O.PartialDependenceOutput, result
     result
 
@@ -530,6 +545,9 @@ H2O.Routines = (_) ->
     createDataframe name, vectors, (sequence 1), null,
       description: ''
       origin: origin
+
+  inspectPartialDependence = (data) ->
+    inspectTwoDimTable_ "partial dependence", "getPartialDependence", data.description, data.data
 
   _schemaHacks =
     KMeansOutput:
@@ -783,6 +801,7 @@ H2O.Routines = (_) ->
     createDataframe 'data', vectors, (sequence frame.row_count - frame.row_offset), null,
       description: 'A partial list of rows in the H2O Frame.'
       origin: "getFrameData #{stringify frameKey}"
+
 
   extendFrameData = (frameKey, frame) ->
     inspections =

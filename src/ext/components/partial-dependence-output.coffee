@@ -3,13 +3,28 @@ H2O.PartialDependenceOutput = (_, _go, _result) ->
   _destinationKey = _result.destination_key
   _modelId = _result.model_id.name
   _frameId = _result.frame_id.name
+  _pdpdata = _result.partial_dependence_data
 
-  _partialDependencePlots = map _result.partial_dependence_data, (item) ->
+  renderPlot = (target, render) ->
+    render (error, vis) ->
+      if error
+        debug error
+      else
+        target vis.element
+
+  _partialDependencePlots = map _pdpdata, (item) ->
   	description: item.columns[0].description
-  	plot: item.data
-  	table: item.data
+  	plot: signal null
+  	table: signal null
 
-  # _partialDependenceData = _result.partial_dependence_data
+  for pdp,i in _partialDependencePlots 
+    if table = _.inspect 'data', _pdpdata[i].data
+      renderPlot pdp.plot, _.plot (g) -> g(
+          g.path(
+            g.position _pdpdata[i].columns[0].name, _pdpdata[i].columns[1].name
+          )
+          g.from table
+        )
 
   _viewFrame = ->
     _.insertAndExecuteCell 'cs', "requestPartialDependenceData #{stringify _destinationKey}"

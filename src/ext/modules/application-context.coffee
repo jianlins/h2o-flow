@@ -66,6 +66,12 @@ H2O.ApplicationContext = (_) ->
   _.requestHelpIndex = do slot
   _.requestHelpContent = do slot
   _.requestExec = do slot
+  ##should remove
+  _.inspectPartialDependence = do slot
+  _.inspectTwoDimTable_ = do slot
+  _.convertTableToFrame = do slot
+  ##should remove
+  _
   _.ls = do slot
   _.inspect = do slot
   _.plot = do slot
